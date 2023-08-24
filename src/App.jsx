@@ -5,6 +5,8 @@ import loginService from './services/login'
 import Note from "./components/Note"
 import Notification from "./components/Notification"
 import LoginForm from "./components/LoginForm"
+import Togglable from "./components/Togglable"
+import NoteForm from "./components/NoteForm"
 
 function App(props) {
   const [notes, setNotes] = useState(null)
@@ -132,10 +134,13 @@ function App(props) {
   }
 
   const noteForm = () => (
-    <form onSubmit={addNote}>
-      <input value={newNote} onChange={handleNoteChange}/>
-      <button type="submit">save</button>
-    </form>
+    <Togglable buttonLabel="new note">
+      <NoteForm 
+        onSubmit={addNote}
+        value={newNote}
+        handleChange={handleNoteChange}
+      />
+    </Togglable>
   )
 
   const notesToShow = showAll ? notes : notes.filter(note => note.important)

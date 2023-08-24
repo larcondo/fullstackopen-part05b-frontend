@@ -1,13 +1,13 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef } from 'react'
 // import axios from 'axios'
 import noteService from './services/notes'
 import loginService from './services/login'
-import Footer from "./components/Footer"
-import Note from "./components/Note"
-import Notification from "./components/Notification"
-import LoginForm from "./components/LoginForm"
-import Togglable from "./components/Togglable"
-import NoteForm from "./components/NoteForm"
+import Footer from './components/Footer'
+import Note from './components/Note'
+import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
+import NoteForm from './components/NoteForm'
 
 function App() {
   const [notes, setNotes] = useState(null)
@@ -21,9 +21,9 @@ function App() {
 
   const hook = () => {
     noteService.getAll()
-    .then( initialNotes => {
-      setNotes(initialNotes)
-    })
+      .then( initialNotes => {
+        setNotes(initialNotes)
+      })
   }
 
   useEffect(hook, [])
@@ -41,33 +41,26 @@ function App() {
   const addNote = (noteObject) => {
     noteFormRef.current.toggleVisibility()
     noteService.create(noteObject)
-    .then(returnedNote => {
-      setNotes(notes.concat(returnedNote))
-    })
+      .then(returnedNote => {
+        setNotes(notes.concat(returnedNote))
+      })
   }
 
   const toggleImportanceOf = (id) => {
-    // console.log('importance of ' + id + ' needs to be toggled')
-    // console.log(`importance of ${id} needs to be toggled`)
-    // const url = `http://localhost:3001/notes/${id}`
     const note = notes.find(n => n.id === id)
     const changedNote = { ...note, important: !note.important }
 
-    // axios.put(url, changedNote)
-    //   .then(response => {
-    //     setNotes(notes.map(n => n.id !== id ? n : response.data))
-    //   })
     noteService.update(id, changedNote)
-    .then(returnedNote => {
-      setNotes(notes.map(note => note.id !== id ? note : returnedNote))
-    })
-    .catch(error => {
-      setErrorMessage(`the note '${note.content}' was already deleted from server`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-      setNotes(notes.filter(n => n.id !== id))
-    })
+      .then(returnedNote => {
+        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+      })
+      .catch(error => {
+        setErrorMessage(`the note '${note.content}' was already deleted from server`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        setNotes(notes.filter(n => n.id !== id))
+      })
   }
 
   const handleLogin = async (event) => {
@@ -132,17 +125,17 @@ function App() {
 
       { !user && loginForm() }
       { user && <div>
-          <p>{ user.name } logged in</p>
-          { noteForm() }
-        </div> 
+        <p>{ user.name } logged in</p>
+        { noteForm() }
+      </div>
       }
 
       <div>
         <button onClick={() => setShowAll(!showAll)}>show {showAll ? 'important' : 'all'}</button>
       </div>
       <ul>
-        { notesToShow.map( note => 
-          <Note key={note.id} 
+        { notesToShow.map( note =>
+          <Note key={note.id}
             note={note}
             toggleImportance={() => toggleImportanceOf(note.id)} />)
         }

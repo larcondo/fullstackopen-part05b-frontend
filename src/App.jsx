@@ -12,7 +12,7 @@ function App(props) {
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, serUser] = useState(null)
+  const [user, setUser] = useState(null)
 
   const hook = () => {
     noteService.getAll()
@@ -23,6 +23,15 @@ function App(props) {
 
   useEffect(hook, [])
   // console.log('render', notes.length, 'notes');
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      noteService.setToken(user.token)
+    }
+  }, [])
 
   const addNote = (event) => {
     event.preventDefault()
@@ -82,7 +91,11 @@ function App(props) {
       const user = await loginService.login({
         username, password
       })
-      serUser(user)
+      window.localStorage.setItem(
+        'loggedNoteappUser', JSON.stringify(user)
+      )
+      noteService.setToken(user.token)
+      setUser(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
